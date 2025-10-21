@@ -1,0 +1,14 @@
+.wrapper {
+  display: flex;
+}
+.item a {
+  font-size: 1.5rem;
+  font-weight: 550;
+  color: #fff;
+}
+.item .active {
+  background: #fff3;
+  backdrop-filter: blur(1.5rem);
+  color: #fff;
+  border-radius: 5px;
+}

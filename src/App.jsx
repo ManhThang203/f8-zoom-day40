@@ -1,7 +1,9 @@
+// Components
+import AppRouter from "@/components/AppRoutes";
 // Scss
 import "@/assets/styles/main.scss";
 function App() {
-  return <h1>Hello</h1>;
+  return <AppRouter />;
 }
 
 export default App;

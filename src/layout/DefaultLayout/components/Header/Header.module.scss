@@ -1,0 +1,15 @@
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  padding: 0 12px;
+  height: 66px;
+  background-image: linear-gradient(to right, #f83600 0%, #f9d423 100%);
+  border-bottom: 1px solid #e8ebed;
+}

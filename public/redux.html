@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./redux.css" />
+    <title>Redux-Core</title>
+  </head>
+  <body>
+    <div class="wrapper">
+      <div class="conatiner">
+        <header class="heading">
+          <h2 class="title">Redux Couter</h2>
+          <span>Redux Core</span>
+        </header>
+      </header>
+      <main>
+        <h1 class="text-value">0</h1>
+      </main>
+      <footer class="footer">
+        <button class="btn primary" id="increase">Increase</button>
+        <button class="btn primary" id="decrease">Decrease</button>
+        <button class="btn reset" id="reset">Reset</button>
+        <button class="btn alert" id="alert">Remove Listener</button>
+      </footer>
+    </div>
+
+  </body>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/redux@4.2.1/dist/redux.js"></script> -->
+
+  <script  type="module">
+    import createStore from "./redux.js";
+    // Bước 1: Tạo giá trị khởi tạo
+    const initState = 0;
+
+    // Bước 2: Tạo hàm reducer nhận vào state và action
+    function reducer(state, action){
+      switch(action.type){
+        case "increase": {
+          return ++state;
+        }
+        case "decrease": {
+          return --state;
+        }
+        case "reset": {
+          return initState;
+        }
+        default:
+        return state
+      }
+    } 
+    // Bước 3: Tạo ra Store nhận reducer và gia trị state khởi tạo
+    const store = createStore(reducer, initState);
+    
+    // Dom Element
+    const textValue = document.querySelector(".text-value");
+    const increaseBtn = document.querySelector("#increase");
+    const decreaseBtn = document.querySelector("#decrease");
+    const resetBtn = document.querySelector("#reset");
+    const removeBtn = document.querySelector("#alert");
+
+    // Lắng nghe sự kiên trên Dom Element
+    increaseBtn.addEventListener("click", () => {
+      store.dispatch({
+        type:"increase",
+      })
+    })
+
+    decreaseBtn.addEventListener("click", () => {
+      store.dispatch({
+        type:"decrease",
+      })
+    })
+
+    resetBtn.addEventListener("click", () => {
+      store.dispatch({
+        type:"reset",
+      })
+    })
+
+    removeBtn.addEventListener("click", () => {
+      unSubscribe();
+    })
+    
+    // Bước 4: Tạo hàm reder ra Ui
+    function render(){
+      textValue.textContent = store.getState();
+    }
+    render();
+
+    // Bước 5: sử dụng subscribe để lắng nghe sự thay đổi của state thì gọi lại hàn render
+    // Hàm subscribe sẽ trả về unSubscribe để lại bỏ đi lắng nghe
+    // Unsubscribe
+    const unSubscribe = store.subscribe(() => render());
+
+  </script>
+</html>
