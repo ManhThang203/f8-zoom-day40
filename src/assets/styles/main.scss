@@ -1,0 +1,42 @@
+@use "./reset" as *;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 62.5%;
+}
+
+body {
+  font-size: 1.6rem;
+  line-height: 1.3;
+  font-family: "Source Sans 3", sans-serif;
+  height: 100vh;
+
+  background-color: #edf4ff;
+}
+a {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  padding: 15px;
+}
+button {
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+input,
+button,
+textarea,
+select {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  border: none;
+  outline: none;
+}
