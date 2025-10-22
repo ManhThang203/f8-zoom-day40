@@ -1,0 +1,35 @@
+.item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f6f6f6;
+  padding: 8px 12px;
+  margin-bottom: 6px;
+  border-radius: 8px;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+
+  button {
+    cursor: pointer;
+    border: none;
+    background: #ddd;
+    padding: 4px 8px;
+    border-radius: 6px;
+
+    &:hover:not(:disabled) {
+      background: #ccc;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  .deleteBtn {
+    background: #ffb3b3;
+  }
+}
