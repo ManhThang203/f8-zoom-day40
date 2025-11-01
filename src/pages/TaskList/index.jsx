@@ -36,7 +36,6 @@ function TaskList() {
     );
     return filterTasks;
   });
-
   console.log(tasks);
 
   const loading = useSelector((state) => state.loading);
@@ -148,7 +147,7 @@ function TaskList() {
   };
 
   const showEmpty = tasks.length === 0;
-  const showError = loading && error;
+  const showError = error;
 
   return (
     <div className={styles.wrapper}>
@@ -167,10 +166,14 @@ function TaskList() {
             </Link>
           </div>
         </header>
-        <main>
+        <main className={styles.main}>
           {/* Task List */}
-          {loading && <Loading />}
-          {showError ?? <div className={styles.error}>💥 {error}</div>}
+          {loading && (
+            <div className={styles.wrapperLoading}>
+              <Loading className={styles.loading} />
+            </div>
+          )}
+          {showError ?? <div className={styles.error}>{error}</div>}
           {showEmpty ? (
             <ul className={styles.list}>
               <li className={styles.empty}>Chưa có task nào</li>

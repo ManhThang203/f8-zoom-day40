@@ -14,14 +14,9 @@ const API = "http://localhost:3001/tasks";
 function NewTask() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const loading = useSelector((state) => state.loading);
+  const loading = useSelector((state) => state.loadingl);
 
   const handleCreateTask = async (task) => {
-    dispatch({
-      type: SET_LOADING,
-      payload: true,
-    });
-
     const payload = {
       name: task.name,
       priority: task.priority,

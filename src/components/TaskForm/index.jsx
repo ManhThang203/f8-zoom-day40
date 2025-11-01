@@ -43,8 +43,8 @@ function TaskForm({ inittialData, onSubmit, submitText, isLoading }) {
 
   // Cập nhật state khi inittialData thay đổi cho các trường name và priority
   useEffect(() => {
-    setName(inittialData.name ?? "");
-    setPriority(inittialData.priority ?? "");
+    setName(inittialData?.name ?? "");
+    setPriority(inittialData?.priority ?? "");
   }, [inittialData]);
 
   return isLoading ? (

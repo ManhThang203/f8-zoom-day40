@@ -3,3 +3,15 @@
   overflow: hidden;
   overflow-y: auto;
 }
+.wrapperLoading {
+  position: fixed;
+  inset: 0;
+  background: #fff3;
+  backdrop-filter: blur(1.5rem);
+}
+.loading {
+  position: absolute;
+  top: 50%;
+  right: 50%;
+  transform: translate(-50%, -50%);
+}
