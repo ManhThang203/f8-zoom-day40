@@ -1,34 +1,16 @@
 {
   "tasks": [
     {
-      "id": 1,
-      "name": "Học HTML & CSS",
-      "priority": "Low",
-      "completed": false
-    },
-    {
-      "id": 2,
-      "name": "Học Js",
+      "id": "09e7",
+      "name": "fsdfas",
       "priority": "Medium",
-      "completed": true
-    },
-    {
-      "id": 3,
-      "name": "Học React",
-      "priority": "High",
       "completed": false
     },
     {
-      "id": 4,
-      "name": "Làm bài tập",
-      "priority": "Low",
-      "completed": true
-    },
-    {
-      "id": 5,
-      "name": "Học lại bài cũ",
-      "priority": "High",
-      "completed": true
+      "id": "7c86",
+      "name": "122",
+      "priority": "Medium",
+      "completed": false
     }
   ]
 }

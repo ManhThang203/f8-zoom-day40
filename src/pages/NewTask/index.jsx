@@ -1,56 +1,77 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useDispatch } from "../../libs/react-redux";
-import { taskAPI } from "../../services/api";
-
-import styles from "./NewTask.module.scss";
+// React
+import { useNavigate } from "react-router";
+// Libs
+import { useDispatch, useSelector } from "@/libs/react-redux";
+// Components
 import TaskForm from "@/components/TaskForm";
-const NewTask = () => {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState(null);
+// Reducers
+import { ADD_TASK, SET_ERROR, SET_LOADING } from "@/store/reducers/taskReducer";
+// Scss
+import styles from "./NewTask.module.scss";
 
-  const handleSubmit = async (formData) => {
-    setIsSubmitting(true);
-    setError(null);
+const API = "http://localhost:3001/tasks";
+
+function NewTask() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const loading = useSelector((state) => state.loading);
+
+  const handleCreateTask = async (task) => {
+    dispatch({
+      type: SET_LOADING,
+      payload: true,
+    });
+
+    const payload = {
+      name: task.name,
+      priority: task.priority,
+      completed: false,
+    };
 
     try {
-      const newTask = await taskAPI.create(formData);
-      dispatch({ type: "ADD_TASK", payload: newTask });
-      navigate("/");
-    } catch (err) {
-      setError(err.message || "Không thể tạo task. Vui lòng thử lại!");
-      console.error("Error creating task:", err);
+      const res = await fetch(`${API}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) throw new Error("Đã xảy ra lỗi khi tạo tác vụ mới.");
+
+      const createdTask = await res.json();
+
+      dispatch({
+        type: ADD_TASK,
+        payload: createdTask,
+      });
+      navigate("/todo-app");
+    } catch (error) {
+      dispatch({
+        type: SET_ERROR,
+        payload: error.message,
+      });
     } finally {
-      setIsSubmitting(false);
+      dispatch({
+        type: SET_LOADING,
+        payload: false,
+      });
     }
   };
-
-  const handleCancel = () => {
-    navigate("/");
-  };
-
   return (
-    <div style={styles.container}>
-      <div style={styles.header}>
-        <h1 style={styles.title}>Tạo Task Mới</h1>
+    <div className={styles.wrapper}>
+      <div className={styles.card}>
+        <header className={styles.header}>
+          <h1 className={styles.title}>Create New Task</h1>
+        </header>
+        <main>
+          <TaskForm
+            inittialData={{ name: "", priority: "" }}
+            onSubmit={handleCreateTask}
+            submitText="Create"
+            isLoading={loading}
+          />
+        </main>
       </div>
-
-      {error && <div style={styles.errorBox}>{error}</div>}
-
-      <TaskForm
-        initialData={{
-          name: "",
-          priority: "Medium",
-          completed: false,
-        }}
-        onSubmit={handleSubmit}
-        onCancel={handleCancel}
-        submitText="Tạo Task"
-        isLoading={isSubmitting}
-      />
     </div>
   );
-};
+}
 export default NewTask;

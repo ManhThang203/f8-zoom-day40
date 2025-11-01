@@ -33,6 +33,8 @@ function useSelector(selector) {
       return unSubscribe;
     });
   }, [selector, state, store]);
+
+  return state;
 }
 
 export { useStore, useDispatch, useSelector };

@@ -1,7 +1,5 @@
-// React
 import { Outlet } from "react-router";
-// Scss
-import styles from "./TodeApp.module.scss";
+import styles from "./TodoApp.module.scss";
 function TodeApp() {
   return (
     <div className={styles.wrapper}>

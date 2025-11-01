@@ -1,117 +1,49 @@
-import React, { useState } from "react";
+import clsx from "clsx";
+// React
+import { Link } from "react-router";
+import { LuPen } from "react-icons/lu";
+import { AiOutlineDelete } from "react-icons/ai";
+// Components
+import Button from "@/components/Button";
+// Scss
 import styles from "./TaskItem.module.scss";
-const TaskItem = ({ task, onEdit, onDelete, isDeleting = false }) => {
-  const [isHovered, setIsHovered] = useState(false);
 
-  const handleDelete = () => {
-    if (window.confirm("Bạn có chắc muốn xóa task này?")) {
-      onDelete();
-    }
-  };
-
-  const getPriorityColor = (priority) => {
-    switch (priority) {
-      case "High":
-        return "#f44336";
-      case "Medium":
-        return "#ff9800";
-      case "Low":
-        return "#4caf50";
-      default:
-        return "#9e9e9e";
-    }
-  };
-
-  const getPriorityText = (priority) => {
-    switch (priority) {
-      case "High":
-        return "Cao";
-      case "Medium":
-        return "Trung bình";
-      case "Low":
-        return "Thấp";
-      default:
-        return priority;
-    }
-  };
-
+function TaskItem({ task, onEdit, onDeleted }) {
+  const badgeClass = clsx({
+    [styles.badgeLow]: task.priority === "Low",
+    [styles.badgeMedium]: task.priority === "Medium",
+    [styles.badgeHight]: task.priority === "Hight",
+  });
   return (
-    <div
-      style={{
-        ...styles.container,
-        ...(isHovered ? styles.containerHovered : {}),
-        ...(task.completed ? styles.containerCompleted : {}),
-      }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
-      <div style={styles.content}>
-        <div style={styles.mainInfo}>
-          {task.completed && <span style={styles.checkIcon}>✓</span>}
-          <h3
-            style={{
-              ...styles.title,
-              ...(task.completed ? styles.titleCompleted : {}),
-            }}
-          >
-            {task.name}
-          </h3>
-        </div>
-
-        <div style={styles.meta}>
-          <span
-            style={{
-              ...styles.priorityBadge,
-              backgroundColor: getPriorityColor(task.priority),
-            }}
-          >
-            {getPriorityText(task.priority)}
-          </span>
-          {task.completed && <span style={styles.statusBadge}>Hoàn thành</span>}
-        </div>
-      </div>
-
-      <div style={styles.actions}>
-        <button
-          onClick={onEdit}
-          disabled={isDeleting}
-          style={{
-            ...styles.editButton,
-            ...(isDeleting ? styles.buttonDisabled : {}),
-          }}
-          onMouseEnter={(e) => {
-            if (!isDeleting) {
-              e.target.style.backgroundColor = "#1976D2";
-            }
-          }}
-          onMouseLeave={(e) => {
-            e.target.style.backgroundColor = "#2196F3";
-          }}
+    <div className={styles.item}>
+      {/* Item Left */}
+      <label style={styles.itemLeft}>
+        <input
+          type="checkbox"
+          checked={task.completed}
+          onChange={() => onEdit({ ...task, completed: !task.completed })}
+        />
+        <span
+          className={clsx(styles.title, {
+            [styles.done]: task.completed,
+          })}
         >
-          ✏️ Sửa
-        </button>
-
-        <button
-          onClick={handleDelete}
-          disabled={isDeleting}
-          style={{
-            ...styles.deleteButton,
-            ...(isDeleting ? styles.buttonDisabled : {}),
-          }}
-          onMouseEnter={(e) => {
-            if (!isDeleting) {
-              e.target.style.backgroundColor = "#d32f2f";
-            }
-          }}
-          onMouseLeave={(e) => {
-            e.target.style.backgroundColor = "#f44336";
-          }}
-        >
-          {isDeleting ? "⏳ Đang xóa..." : "🗑️ Xóa"}
-        </button>
+          {task.name}
+        </span>
+      </label>
+      {/* Item Right */}
+      <div className={styles.itemRight}>
+        <span className={clsx(styles.badge, badgeClass)}>{task.priority}</span>
+        <Link to={`${task.id}/edit`}>
+          <Button outline className={styles.btn}>
+            <LuPen />
+          </Button>
+        </Link>
+        <Button outline className={styles.btn} onClick={onDeleted}>
+          <AiOutlineDelete />
+        </Button>
       </div>
     </div>
   );
-};
-
+}
 export default TaskItem;

@@ -1,138 +1,106 @@
-import React, { useState, useEffect, useRef } from "react";
+// React
+import { useEffect, useRef, useState } from "react";
+// Components
+import Loading from "@/components/Loading";
+import Button from "@/components/Button";
+// Scss
 import styles from "./TaskForm.module.scss";
-const TaskForm = ({
-  initialData = { name: "", priority: "Medium", completed: false },
-  onSubmit,
-  onCancel,
-  submitText = "Lưu",
-  isLoading = false,
-}) => {
-  const [name, setName] = useState(initialData.name || "");
-  const [priority, setPriority] = useState(initialData.priority || "Medium");
-  const [completed, setCompleted] = useState(initialData.completed || false);
-  const [error, setError] = useState("");
+import { Link } from "react-router";
+
+function TaskForm({ inittialData, onSubmit, submitText, isLoading }) {
+  const [name, setName] = useState("");
+  const [priority, setPriority] = useState("");
+  const [titleNameError, setTitleNameError] = useState(null);
+  const [titlePriorityError, setTitlePriorityError] = useState(null);
   const inputRef = useRef(null);
-
-  // Auto focus khi component mount
-  useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.focus();
-    }
-  }, []);
-
-  const validateName = (value) => {
-    const trimmedValue = value.trim();
-    if (!trimmedValue) {
-      return "Tên task không được để trống";
-    }
-    return "";
-  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const validationError = validateName(name);
-    if (validationError) {
-      setError(validationError);
+    const taskName = name.trim();
+
+    if (taskName === "") {
+      setTitleNameError("🚨 Tiêu đề không được để trống!");
+      inputRef.current.focus();
       return;
     }
 
-    setError("");
+    if (!priority) {
+      setTitlePriorityError("🚨 Vui lòng chọn mức ưu tiên!");
+      return;
+    }
+
+    // Cập nhật khi name và priority lên dữ liệu
     onSubmit({
-      name: name.trim(),
-      priority,
-      completed,
+      name: taskName,
+      priority: priority,
     });
   };
+  // focus vào Input
+  useEffect(() => {
+    inputRef.current.focus();
+  }, []);
 
-  const handleNameChange = (e) => {
-    setName(e.target.value);
-    if (error) {
-      setError("");
-    }
-  };
+  // Cập nhật state khi inittialData thay đổi cho các trường name và priority
+  useEffect(() => {
+    setName(inittialData.name ?? "");
+    setPriority(inittialData.priority ?? "");
+  }, [inittialData]);
 
-  return (
-    <form onSubmit={handleSubmit} style={styles.form}>
-      <div style={styles.formGroup}>
-        <label htmlFor="name" style={styles.label}>
-          Tên Task <span style={styles.required}>*</span>
-        </label>
-        <input
-          ref={inputRef}
-          id="name"
-          type="text"
-          value={name}
-          onChange={handleNameChange}
-          disabled={isLoading}
-          placeholder="Nhập tên task..."
-          style={{
-            ...styles.input,
-            ...(error ? styles.inputError : {}),
-            ...(isLoading ? styles.inputDisabled : {}),
-          }}
-        />
-        {error && <div style={styles.errorMessage}>{error}</div>}
-      </div>
-
-      <div style={styles.formGroup}>
-        <label htmlFor="priority" style={styles.label}>
-          Độ ưu tiên
-        </label>
-        <select
-          id="priority"
-          value={priority}
-          onChange={(e) => setPriority(e.target.value)}
-          disabled={isLoading}
-          style={{
-            ...styles.select,
-            ...(isLoading ? styles.inputDisabled : {}),
-          }}
-        >
-          <option value="Low">Thấp</option>
-          <option value="Medium">Trung bình</option>
-          <option value="High">Cao</option>
-        </select>
-      </div>
-
-      <div style={styles.formGroup}>
-        <label style={styles.checkboxLabel}>
+  return isLoading ? (
+    <Loading />
+  ) : (
+    <form onSubmit={handleSubmit}>
+      <div className={styles.field}>
+        {/* Title */}
+        <label>
+          <span>Title</span>
           <input
-            type="checkbox"
-            checked={completed}
-            onChange={(e) => setCompleted(e.target.checked)}
-            disabled={isLoading}
-            style={styles.checkbox}
+            type="text"
+            ref={inputRef}
+            placeholder="Nhập tên công việc..."
+            value={name}
+            onChange={(e) => {
+              setName(e.target.value);
+              setTitleNameError(null);
+            }}
           />
-          <span style={styles.checkboxText}>Đã hoàn thành</span>
+          {titleNameError ?? (
+            <div className={styles.error}>{titleNameError}</div>
+          )}
         </label>
-      </div>
-
-      <div style={styles.buttonGroup}>
-        <button
-          type="submit"
-          disabled={isLoading}
-          style={{
-            ...styles.submitButton,
-            ...(isLoading ? styles.buttonDisabled : {}),
-          }}
-        >
-          {isLoading ? "Đang xử lý..." : submitText}
-        </button>
-        <button
-          type="button"
-          onClick={onCancel}
-          disabled={isLoading}
-          style={{
-            ...styles.cancelButton,
-            ...(isLoading ? styles.buttonDisabled : {}),
-          }}
-        >
-          Hủy
-        </button>
+        {/* Choose */}
+        <div className={styles.block}>
+          <label>Priority</label>
+          <div className={styles.selecWrapper}>
+            <select
+              value={priority}
+              onChange={(e) => {
+                setPriority(e.target.value);
+                setTitlePriorityError(null);
+              }}
+            >
+              <option value="" disabled>
+                Choose Task Priority
+              </option>
+              <option>High</option>
+              <option>Medium</option>
+              <option>Low</option>
+            </select>
+            {titlePriorityError ?? (
+              <div className={styles.error}>{titlePriorityError}</div>
+            )}
+          </div>
+        </div>
+        {/* Btn */}
+        <div className={styles.btnWapper}>
+          <Button outline>{submitText}</Button>
+          <Link to={"/todo-app"}>
+            <Button outline>Cancel</Button>
+          </Link>
+        </div>
       </div>
     </form>
   );
-};
-
+}
 export default TaskForm;
